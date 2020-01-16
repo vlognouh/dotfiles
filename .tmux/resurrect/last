@@ -1,0 +1,17 @@
+pane	0	1	:[tmux]	1	:*	1	:/home/vnguyen	1	bash	:
+pane	3	1	:bash	1	:*	1	:/home/vnguyen	1	bash	:
+pane	falcon_1	1	:BMC	0	:-	1	:/home/vnguyen	1	telnet	:telnet 10.38.64.61 7502
+pane	falcon_1	2	:CPU	1	:*	1	:/home/vnguyen	1	telnet	:telnet 10.38.64.11 7002
+pane	falcon_1	3	:Bash	0	:	1	:/work/vnguyen/falcon/amp-atf	1	bash	:
+pane	falcon_1	4	:ipmitool	0	:	1	:/home/vnguyen	1	ipmitool	:ipmitool -U ADMIN -P XXXXX -H 10.38.64.33 -I lanplus sol activate instance=2
+pane	raptor_t4	1	:BMC	1	:*	1	:/home/vnguyen	1	bash	:
+pane	raptor_t4	2	:CPU	0	:-	1	:/home/vnguyen	1	bash	:
+window	0	1	1	:*	bb5d,230x63,0,0,0
+window	3	1	1	:*	bb66,230x63,0,0,9
+window	falcon_1	1	0	:-	bb61,230x63,0,0,4
+window	falcon_1	2	1	:*	bb62,230x63,0,0,5
+window	falcon_1	3	0	:	bb64,230x63,0,0,7
+window	falcon_1	4	0	:	5de3,230x63,0,0,14
+window	raptor_t4	1	1	:*	5ddf,230x63,0,0,10
+window	raptor_t4	2	0	:-	5de1,230x63,0,0,12
+state	falcon_1	

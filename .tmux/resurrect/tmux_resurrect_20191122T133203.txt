@@ -1,0 +1,9 @@
+pane	0	1	:[tmux]	1	:*	1	:/home/vnguyen	1	bash	:
+pane	falcon_1	1	:BMC	0	:-	1	:/home/vnguyen	1	telnet	:telnet 10.38.64.61 7501
+pane	falcon_1	2	:CPU	1	:*	1	:/home/vnguyen	1	telnet	:telnet 10.38.64.11 7001
+pane	falcon_1	3	:bash	0	:	1	:/home/vnguyen	1	bash	:
+window	0	1	1	:*	bb5d,230x63,0,0,0
+window	falcon_1	1	0	:-	bb61,230x63,0,0,4
+window	falcon_1	2	1	:*	bb62,230x63,0,0,5
+window	falcon_1	3	0	:	bb64,230x63,0,0,7
+state	falcon_1	

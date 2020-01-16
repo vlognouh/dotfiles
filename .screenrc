@@ -1,0 +1,73 @@
+# ~/.screenrc
+
+#term screen-256color
+#term xterm-256color
+
+escape ``
+escape `e
+
+altscreen on
+autodetach on
+bufferfile "$HOME/.screen/exchange"
+encoding UTF-8
+defutf8 on
+nonblock on
+setenv LC_CTYPE en_US.UTF-8
+startup_message off
+vbell off
+
+logfile /work/vnguyen/screen/screenlog-%S-%t-%Y%m%d
+
+#change the hardstatus settings to give an window list at the bottom of the
+#screen, with the time and date and with the current window highlighted
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+
+# Inscrease screen buffer
+defscrollback 10000
+
+# Enable mouse scrolling and scroll bar history scrolling
+termcapinfo xterm* ti@:te@
+
+##   Keybindings   ##
+# F7='k7', F8='k8', F9='k9', F10='k;', F11='F1', F12='F2'
+# Good things to bind to hotkeys:
+#  prev (go to previous screen)
+#  next (go to next screen)
+#  kill (kill this window)
+#  screen (create a new window)
+#  title (rename the current window)
+#  detach (detach this session from this terminal)
+#bindkey -k F2 next
+#bindkey -k F1 prev
+bindkey -k k8 screen
+bindkey -k k7 title
+bindkey -k k9 kill
+bind R eval "source $HOME/.screenrc" "echo '.screenrc reloaded!!'"
+
+# remove some stupid / dangerous key bindings
+bind ^k
+bind ^\
+
+# control-left and control-right switch windows
+bindkey "^[[1;5D" prev
+bindkey "^[[1;5C" next
+
+# make them better
+bind Q quit
+bind } history
+
+# find the nearest shell
+bind s select bash 
+
+# make scroll work
+#termcapinfo rxvt-256color ti@:te@
+termcapinfo xterm-256color ti@:te@
+
+# make colors work
+#termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+termcapinfo rxvt-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+#screen -t working1 1  
+select 0
+
+scrollback 10000

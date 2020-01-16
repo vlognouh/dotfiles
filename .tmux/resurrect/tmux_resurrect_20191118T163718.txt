@@ -1,0 +1,7 @@
+pane	falcon_1	1	:BMC	1	:*	1	:/home/vnguyen	1	telnet	:telnet 10.38.64.61 7501
+pane	falcon_1	2	:CPU	0	:-	1	:/home/vnguyen	1	telnet	:telnet 10.38.64.11 7001
+pane	falcon_1	3	:bash	0	:	1	:/home/vnguyen	1	bash	:
+window	falcon_1	1	1	:*	d15d,230x59,0,0,0
+window	falcon_1	2	0	:-	d162,230x59,0,0,5
+window	falcon_1	3	0	:	d163,230x59,0,0,6
+state	falcon_1	

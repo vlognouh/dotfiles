@@ -1,0 +1,6 @@
+pane	falcon_1	1	:bash	1	:*M	1	:/home/vnguyen	0	telnet	:telnet 10.38.64.61 7501
+pane	falcon_1	1	:bash	1	:*M	2	:/home/vnguyen	1	telnet	:telnet 10.38.64.11 7001
+pane	falcon_1	2	:bash	0	:-	1	:/home/vnguyen	1	bash	:
+window	falcon_1	1	1	:*M	6346,230x63,0,0{86x63,0,0,0,143x63,87,0,12}
+window	falcon_1	2	0	:-	5de5,230x63,0,0,16
+state	falcon_1	

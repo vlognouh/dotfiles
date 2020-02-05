@@ -34,7 +34,7 @@ set shiftwidth=4
 set smarttab
 
 " key sequence timeout
-set timeoutlen=0                        " enable time out
+set timeoutlen=3000                        " enable time out
 set ttimeoutlen=0                       " decrease esc delay
 
 " search
@@ -52,12 +52,9 @@ set termguicolors
 
 " hightline current line
 set cursorline
-set mouse=a
+set mouse-=a
 
 set list
-set listchars=tab:▸·
-"set list
-"set listchars=tab:--,trail:.,eol:¬,extends:>,precedes:<
 "set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set listchars=tab:>·,trail:~,extends:>,precedes:<,space:·
 
@@ -81,31 +78,31 @@ Plugin 'tomasr/molokai'
 Plugin 'airblade/vim-rooter'
 Plugin 'Raimondi/delimitMate'
 
+" The bang version will try to download the prebuilt binary if cargo does not exist.
+Plugin 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+
+Plugin 'tpope/vim-surround'
+Plugin 'easymotion/vim-easymotion'
+
 " Fuzzy file browser
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
 " Autocomplete
-"Plugin 'davidhalter/jedi-vim'
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
-Plugin 'MaskRay/ccls'
-
-
-" Bash command
-Plugin 'tpope/vim-eunuch'
 
 " Indent
 Plugin 'tpope/vim-sleuth'
 
+Plugin 'wikitopian/hardmode'
+
+" open file at line
+Plugin 'kopischke/vim-fetch'
+
 " Git
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
-"if has('nvim') || has('patch-8.0.902')
-"  Plugin 'mhinz/vim-signify'
-"else
-"  Plugin 'mhinz/vim-signify', { 'branch': 'legacy' }
-"endif
 
 " Syntax Highlighter
 Plugin 'compnerd/arm64asm-vim'          " ARM64
@@ -125,6 +122,8 @@ Plugin 'ntpeters/vim-better-whitespace'
 " stuff
 Plugin 'mbbill/fencview'
 Plugin 's3rvac/autofenc'
+
+"
 Plugin 'ryanoasis/vim-devicons'
 
 " Show number of search result
@@ -133,6 +132,28 @@ Plugin 'osyo-manga/vim-anzu'
 
 " stop - all plugins above
 call vundle#end()
+
+
+"""""""""""""""""""""""""""""""""""""""""""" HardMode
+autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
+nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
+
+let g:HardMode_echo = 0
+
+
+"""""""""""""""""""""""""""""""""""""""""""" EasyMotion
+" Require tpope/vim-repeat to enable dot repeat support
+" Jump to anywhere with only `s{char}{target}`
+" `s<CR>` repeat last find motion.
+nmap s <Plug>(easymotion-s)
+" Bidirectional & within line 't' motion
+omap t <Plug>(easymotion-bd-tl)
+" Use uppercase target labels and type as a lower case
+let g:EasyMotion_use_upper = 1
+ " type `l` and match `l`&`L`
+let g:EasyMotion_smartcase = 1
+" Smartsign (type `3` and match `3`&`#`)
+let g:EasyMotion_use_smartsign_us = 1
 
 
 """""""""""""""""""""""""""""""""""""""""""" Custom key mapping
@@ -151,6 +172,19 @@ nmap <S-Down> V
 
 vmap <S-Up> k
 vmap <S-Down> j
+
+noremap <Up> :echo "Use k instead"<CR>
+noremap <Down> :echo "Use j instead"<CR>
+noremap <Left> :echo "Use h instead"<CR>
+noremap <Right> :echo "Use l instead"<CR>
+
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+nmap h <nop>
+nmap l <nop>
 
 
 """"""""""""""""""""""""""""""""""""""""""" Cursor Type
@@ -175,16 +209,26 @@ augroup END
 "Ps = 5  -> blinking bar (xterm).
 "Ps = 6  -> steady bar (xterm).
 
+" disable match bracket highlight
+let g:loaded_matchparen=1
+
 
 """"""""""""""""""""""""""""""""""""""""""" LightLine
 let g:lightline = {
       \     'colorscheme': 'wombat',
       \     'active': {
-      \             'left': [ [ 'mode', 'paste' ], [ 'gitbranch' ], [ 'absolutepath' ] ],
-      \             'right': [ [ 'percent' ], [ 'lineinfo' ], ['noet' , 'fileencoding' , 'filetype'] ],
+      \             'left': [ ['fileicon'], ['cocstatus'], ['absolutepath'] ],
+      \             'right': [ ['lineinfo'], ['noet'], ['gitbranch'] ],
       \     },
+      \     'inactive': {
+      \              'left': [ [], ['filetype'], ['absolutepath'] ],
+      \              'right': []
+      \     },
+      \     'component': { 'lineinfo': ' %2p%% %3l:%-2v' },
       \     'component_function':{
       \             'gitbranch': 'fugitive#head',
+      \             'cocstatus': 'coc#status',
+      \             'fileicon': 'MyFiletype',
       \     },
       \     'component_expand': {
       \             'noet': 'LightlineNoexpandtab',
@@ -193,15 +237,43 @@ let g:lightline = {
       \     },
       \ }
 
-
 function! LightlineNoexpandtab()
-  return &expandtab?' SP '.&shiftwidth:' TB '.&shiftwidth
+  return &expandtab?'SP '.&shiftwidth:'TB '.&shiftwidth
 endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? WebDevIconsGetFileTypeSymbol() : '') : ''
+endfunction
+
+" Use autocmd to force lightline update.
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 
 """""""""""""""""""""""""""""""""""""""""""" Coc
-nmap <F12>       :YcmCompleter GoToDefinition<CR>
 
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" User definition key mapping
+nmap <F11>      <Plug>(coc-references)
+nmap <F12>      <Plug>(coc-definition)
 
 """""""""""""""""""""""""""""""""""""""""""" GitGutter Config
 set updatetime=100
@@ -262,17 +334,16 @@ let g:ctrlsf_mapping = {
 
 let g:ctrlsf_position = 'right'
 
-let g:ctrlsf_ackprg = 'ag'
+let g:ctrlsf_ackprg = 'rg'
 
 nmap     ? <Plug>CtrlSFPrompt
 vmap     ? <Plug>CtrlSFVwordPath
 
 "" Toggle CtrlSF panel
-nnoremap <silent> <C-S> :CtrlSFToggle<CR>
-inoremap <silent> <C-S> <Esc>:CtrlSFToggle<CR>
+map <C-a> <Esc>:CtrlSFToggle<CR>
 
 
-"""""""""""""""""""""""""""""""""""""""""""" better whitespace
+"""""""""""""""""""""""""""""""""""""""""""" trailing whitespace
 let g:better_whitespace_enabled=1
 
 

@@ -158,9 +158,8 @@ let g:EasyMotion_use_smartsign_us = 1
 
 """""""""""""""""""""""""""""""""""""""""""" Custom key mapping
 "" Tab navigation like Firefox.
-nnoremap <S-Tab> :tabprevious<CR>
-nnoremap <Tab>   :tabnext<CR>
-nnoremap <C-w>   :tabclose<CR>
+nnoremap <C-h> :tabprevious<CR>
+nnoremap <C-l>   :tabnext<CR>
 
 " move tab
 noremap <S-Right> :tabmove +1<CR>
@@ -186,6 +185,8 @@ imap <right> <nop>
 nmap h <nop>
 nmap l <nop>
 
+nmap <C-j> <C-e>
+nmap <C-k> <C-y>
 
 """"""""""""""""""""""""""""""""""""""""""" Cursor Type
 " Auto turn off cursol line in edit mode

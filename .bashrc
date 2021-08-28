@@ -35,7 +35,12 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+
 export TERM=xterm-256color
+if [ -n "$STY" ]; then
+    # gnu screen
+    export TERM=screen-256color
+fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
@@ -59,6 +64,11 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 source /etc/bash_completion.d/git-prompt
+if [ "$color_prompt" = yes ]; then
+    PS1='\[\e[1;32m\]┌─ \u@\h\[\e[m\]: \[\e[0;36m\]\w$(__git_ps1)\[\e[m\]\n\[\e[1;32m\]└> \[\e[0m\]'
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
 
 #if [ "$color_prompt" = yes ]; then
 #    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
@@ -71,7 +81,7 @@ unset color_prompt force_color_prompt
 case "$TERM" in
 xterm*|rxvt*)
 #    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    PS1='┌─ \u@\h\[\e[m\]: \[\e[0;36m\]\w$(__git_ps1)\[\e[m\]\n└> \[\e[0m\]'
+    PS1='\[\e[1;32m\]┌─ \u@\h\[\e[m\]: \[\e[0;36m\]\w$(__git_ps1)\[\e[m\]\n\[\e[1;32m\]└> \[\e[0m\]'
     ;;
 *)
     ;;
@@ -90,16 +100,32 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
+source /usr/share/bash-completion/completions/git
 # some more ls aliases
+#alias rg='rg --no-ignore-vcs -C 1'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias denl02='ssh -XY vnguyen@10.73.7.2'
+alias W='cd ~/work/fw/edk2-platforms/'
 
-alias gitl='git log --date=format:'%Y-%m-%d' --pretty=format:"%C(Yellow)%h %Cred%cd %Creset%s"'
+# git
+alias ga='git add -u && git commit --amend --no-edit'
+alias gl='git log --pretty=format:"%C(auto)%h %C(green)(%cd)%C(yellow)%d %Creset%s %C(bold blue)<%an>" --date=format-local:"%y/%m/%d %H:%M"'
+__git_complete gl _git_log
+alias gs='git show --stat'
+__git_complete gs _git_show
+alias gi='git rebase -i'
+__git_complete gi _git_rebase
+
+#
 alias e='emacs -nw'
-alias screen='TERM=screen screen'
+#alias screen='r screen'
+
+alias tmuxa='tmux a -t'
+alias tmuxn='tmux new -s'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -113,6 +139,9 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+
+# PATH
+export PATH=$PATH:/home/vnguyen/work/script
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -130,3 +159,7 @@ fi
 # disable XOFF
 #stty -ixon
 
+if [ -f ~/.git-prompt.sh ]; then
+  source ~/.git-prompt.sh
+fi
+source "$HOME/.cargo/env"

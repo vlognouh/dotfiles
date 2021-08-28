@@ -2,18 +2,26 @@
 " General Settings                                                           "
 "----------------------------------------------------------------------------"
 filetype plugin indent on               " Filetype func on
+au! BufNewFile,BufRead *.uni set filetype=uni
+au! BufNewFile,BufRead *.dsc set filetype=uefi
+au! BufNewFile,BufRead *.dec set filetype=uefi
+au! BufNewFile,BufRead *.inf set filetype=uefi
+au! BufNewFile,BufRead *.vfr set filetype=vfr
+au! BufNewFile,BufRead *.Vfr set filetype=vfr
+au! BufNewFile,BufRead *.fdf set filetype=uefi
 
 set autoread                            " Auto reload file after external command
-set binary                              " Enable binary support
+""" Enable this setting might lead to fileformat dectection issue
+"set binary                              " Enable binary support
 set nocompatible                        " no vi compat
 set hidden                              " Switch tab without needing save current file
 set nofoldenable                        " disable folding
 set guifont=Hack                        " Set font
-set encoding=utf-8                      " Encoding type
+"set encoding=utf-8                      " Encoding type
 set number                              " Enable line number
 "set relativenumber
 set laststatus=2                        " always show the bottom status bar
-set showtabline=2
+set showtabline=2                       " show the top tab bar
 set noshowmode                          " dont show -- INSERT --
 set pastetoggle=<F2>                    " Toggle paste mode with F2
 set showcmd                             " Show current command
@@ -27,14 +35,16 @@ set wildmode=longest,full
 set completeopt-=preview                " make completion menu behave like an ide
 
 " indent
-set tabstop=8
+set tabstop=4
 set softtabstop=0
 set expandtab
 set shiftwidth=4
 set smarttab
 
 " key sequence timeout
-set timeoutlen=3000                        " enable time out
+""" This makes arrow keys not work in INSERT mode
+"set noesckeys                           " don't delay esc
+set timeoutlen=3000                     " enable time out
 set ttimeoutlen=0                       " decrease esc delay
 
 " search
@@ -48,98 +58,99 @@ set nobackup                            " no backup file
 set noswapfile                          " no swap file
 
 " full color support
-set termguicolors
+"set termguicolors
 
 " hightline current line
-set cursorline
-set mouse-=a
+set nocursorline
+set mouse=a
 
 set list
 "set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set listchars=tab:>·,trail:~,extends:>,precedes:<,space:·
 
-"----------------------------------------------------------------------------"
-" vundle plugin                                                              "
-"----------------------------------------------------------------------------"
-" initialize vundle
-set rtp+=~/.vim/bundle/Vundle.vim
+" tags
+set tags=tags,../tags
+set cscopetag
 
-call vundle#begin()
-"" start- all plugins below
-Plugin 'VundleVim/Vundle.vim'
-
+"----------------------------------------------------------------------------"
+" Plug                                                                     "
+"----------------------------------------------------------------------------"
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
+"
 " StatusLine
-Plugin 'itchyny/lightline.vim'
+Plug 'itchyny/lightline.vim'
 
 " Colorscheme
-Plugin 'tomasr/molokai'
+Plug 'tomasr/molokai'
+Plug 'pR0Ps/molokai-dark'
 
 " Productivities
-Plugin 'airblade/vim-rooter'
-Plugin 'Raimondi/delimitMate'
+Plug 'airblade/vim-rooter'
+Plug 'scrooloose/nerdtree'
 
-" The bang version will try to download the prebuilt binary if cargo does not exist.
-Plugin 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+" Auto Bracket Pair
+Plug 'Raimondi/delimitMate'
 
-Plugin 'tpope/vim-surround'
-Plugin 'easymotion/vim-easymotion'
+Plug 'tpope/vim-surround'
+Plug 'easymotion/vim-easymotion'
+
+Plug 'tpope/vim-commentary'
 
 " Fuzzy file browser
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 
 " Autocomplete
-Plugin 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Indent
-Plugin 'tpope/vim-sleuth'
+Plug 'tpope/vim-sleuth'
 
-Plugin 'wikitopian/hardmode'
-
-" open file at line
-Plugin 'kopischke/vim-fetch'
+" open file at line $ vi <filename>:<line>
+Plug 'kopischke/vim-fetch'
 
 " Git
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " Syntax Highlighter
-Plugin 'compnerd/arm64asm-vim'          " ARM64
-Plugin 'alisdair/vim-armasm'            " ARM
-Plugin 'justinmk/vim-syntax-extra'      " Improve syntax highlight
+Plug 'compnerd/arm64asm-vim'          " ARM64
+Plug 'alisdair/vim-armasm'            " ARM
+Plug 'justinmk/vim-syntax-extra'      " Improve syntax highlight
+Plug 'fedorov7/vim-uefi'
+Plug 'martinlroth/vim-acpi-asl'
+Plug 'westeri/asl-vim'
 
 " Enhanced search
-Plugin 'dyng/ctrlsf.vim'
-Plugin 'haya14busa/incsearch.vim'
+Plug 'dyng/ctrlsf.vim'
+Plug 'haya14busa/incsearch.vim'
 
 " Enhanced netrw
-Plugin 'tpope/vim-vinegar'
+Plug 'tpope/vim-vinegar'
 
 " Trailing space
-Plugin 'ntpeters/vim-better-whitespace'
+Plug 'ntpeters/vim-better-whitespace'
 
-" stuff
-Plugin 'mbbill/fencview'
-Plugin 's3rvac/autofenc'
+" Auto detect file encoding
+"Plug 's3rvac/autofenc'
+"set fencs=utf-8,utf-16le
 
-"
-Plugin 'ryanoasis/vim-devicons'
+" Icon
+Plug 'ryanoasis/vim-devicons'
 
 " Show number of search result
-Plugin 'osyo-manga/vim-anzu'
-
+Plug 'osyo-manga/vim-anzu'
 
 " stop - all plugins above
-call vundle#end()
+call plug#end()
 
 
-"""""""""""""""""""""""""""""""""""""""""""" HardMode
-autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
-nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
-
-let g:HardMode_echo = 0
-
+"""""""""""""""""""""""""""""""""""""""""""" Nerd
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
 
 """""""""""""""""""""""""""""""""""""""""""" EasyMotion
 " Require tpope/vim-repeat to enable dot repeat support
@@ -159,7 +170,7 @@ let g:EasyMotion_use_smartsign_us = 1
 """""""""""""""""""""""""""""""""""""""""""" Custom key mapping
 "" Tab navigation like Firefox.
 nnoremap <C-h> :tabprevious<CR>
-nnoremap <C-l>   :tabnext<CR>
+nnoremap <C-l> :tabnext<CR>
 
 " move tab
 noremap <S-Right> :tabmove +1<CR>
@@ -172,35 +183,40 @@ nmap <S-Down> V
 vmap <S-Up> k
 vmap <S-Down> j
 
-noremap <Up> :echo "Use k instead"<CR>
-noremap <Down> :echo "Use j instead"<CR>
-noremap <Left> :echo "Use h instead"<CR>
-noremap <Right> :echo "Use l instead"<CR>
+nnoremap <A-Left>  <C-O>
+nnoremap <A-Right> <C-i>
 
-imap <up> <nop>
-imap <down> <nop>
-imap <left> <nop>
-imap <right> <nop>
-
-nmap h <nop>
-nmap l <nop>
+"noremap <Up> :echo "Use k instead"<CR>
+"noremap <Down> :echo "Use j instead"<CR>
+"noremap <Left> :echo "Use h instead"<CR>
+"noremap <Right> :echo "Use l instead"<CR>
+"
+"imap <up> <nop>
+"imap <down> <nop>
+"imap <left> <nop>
+"imap <right> <nop>
 
 nmap <C-j> <C-e>
 nmap <C-k> <C-y>
 
-""""""""""""""""""""""""""""""""""""""""""" Cursor Type
-" Auto turn off cursol line in edit mode
-autocmd InsertEnter * set nocul
-autocmd InsertLeave * set cul
+nmap <C-p> :FZF<CR>
 
-let &t_SI = "\e[5 q"
-let &t_EI = "\e[2 q"
+autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <C-r> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+
+""""""""""""""""""""""""""""""""""""""""""" Cursor Type
+" Auto turn off cursor line in edit mode
+"autocmd InsertEnter * set nocul
+"autocmd InsertLeave * set cul
+
+" let &t_SI = \"\e[5 q"
+" let &t_EI = \"\e[2 q"
 
 " optional reset cursor on start:
-augroup myCmds
-  au!
-  autocmd VimEnter * silent !echo -ne "\e[2 q"
-augroup END
+" augroup myCmds
+"   au!
+"   autocmd VimEnter * silent !echo -ne \"\e[2 q"
+" augroup END
 
 "Ps = 0  -> blinking block.
 "Ps = 1  -> blinking block (default).
@@ -211,15 +227,15 @@ augroup END
 "Ps = 6  -> steady bar (xterm).
 
 " disable match bracket highlight
-let g:loaded_matchparen=1
+"let g:loaded_matchparen=1
 
 
 """"""""""""""""""""""""""""""""""""""""""" LightLine
 let g:lightline = {
       \     'colorscheme': 'wombat',
       \     'active': {
-      \             'left': [ ['fileicon'], ['cocstatus'], ['absolutepath'] ],
-      \             'right': [ ['lineinfo'], ['noet'], ['gitbranch'] ],
+      \             'left': [ ['filetype'], ['cocstatus'], ['absolutepath'] ],
+      \             'right': [ ['fileencoding'], ['noet'], ['gitbranch'], ['fileformat'] ],
       \     },
       \     'inactive': {
       \              'left': [ [], ['filetype'], ['absolutepath'] ],
@@ -238,6 +254,7 @@ let g:lightline = {
       \     },
       \ }
 
+
 function! LightlineNoexpandtab()
   return &expandtab?'SP '.&shiftwidth:'TB '.&shiftwidth
 endfunction
@@ -251,7 +268,6 @@ autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 
 """""""""""""""""""""""""""""""""""""""""""" Coc
-
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
@@ -276,6 +292,7 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 nmap <F11>      <Plug>(coc-references)
 nmap <F12>      <Plug>(coc-definition)
 
+
 """""""""""""""""""""""""""""""""""""""""""" GitGutter Config
 set updatetime=100
 
@@ -296,8 +313,10 @@ let g:fzf_action = {
 
 
 """""""""""""""""""""""""""""""""""""""""""" Molokai
-syntax on
+syntax enable
 colorscheme molokai
+colorscheme molokai-dark
+"autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
 
 
 """"""""""""""""""""""""""""""""""""""""""" Anzu
@@ -317,11 +336,11 @@ nmap /  <Plug>(incsearch-forward)
 "nmap ?  <Plug>(incsearch-backward)
 "nmap g/ <Plug>(incsearch-stay)
 
-func! TestCmd()
+func! SelectSearch()
   let keys = g:CtrlSFGetVisualSelection()
   call incsearch#call({'pattern':keys})
 endf
-vmap / :<C-U>call TestCmd()<CR>
+vmap / :<C-U>call SelectSearch()<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""" CtrlSF
@@ -346,38 +365,3 @@ map <C-a> <Esc>:CtrlSFToggle<CR>
 
 """""""""""""""""""""""""""""""""""""""""""" trailing whitespace
 let g:better_whitespace_enabled=1
-
-
-"""""""""""""""""""""""""""""""""""""""""""" Custom Statusline
-if 0
-  set statusline=
-  set statusline+=%{'\ '.GetMode().'\ '}
-  set statusline+=%{fugitive#head()!=''?'\ >'.fugitive#head().'\ ':''}
-  set statusline+=%#Visual#       " colour
-  set statusline+=\ %n\           " buffer number
-  set statusline+=%{&paste?'\ PASTE\ ':''}
-  set statusline+=%{&spell?'\ SPELL\ ':''}
-  set statusline+=%#CursorIM#     " colour
-  set statusline+=%{&readonly?'\ \ ':''}                        " readonly flag
-  set statusline+=%#Cursor#               " colour
-  set statusline+=%#CursorLine#     " colour
-  set statusline+=\ %t\                   " short file name
-  set statusline+=%M                        " modified [+] flag
-  set statusline+=%=                          " right align
-  set statusline+=%#CursorLine#   " colour
-  set statusline+=\ %y\                   " file type
-  set statusline+=%(\\ %{&modifiable?(&expandtab?'et\ ':'noet\ ').&shiftwidth.'\ ':''}%)
-  set statusline+=%#CursorIM#     " colour
-  set statusline+=\ %3l:%-2c\         " line + column
-  set statusline+=%#Cursor#       " colour
-  set statusline+=\ %3p%%\                " percentage
-
-  let s:mode_map = {
-        \     'n': 'NORMAL', 'i': 'INSERT', 'R': 'REPLACE', 'v': 'VISUAL', 'V': 'V-LINE', "\<C-v>": 'V-BLOCK',
-        \     'c': 'COMMAND', 's': 'SELECT', 'S': 'S-LINE', "\<C-s>": 'S-BLOCK', 't': 'TERMINAL'
-        \   }
-
-  function! GetMode()
-    return get(s:mode_map, mode(), '')
-  endfunction
-endif
